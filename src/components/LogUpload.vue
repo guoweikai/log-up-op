@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-07-13 07:37:00
  * @LastEditors: GWK
- * @LastEditTime: 2020-07-13 21:19:13
+ * @LastEditTime: 2020-07-13 21:32:39
  * @FilePath: /log-upload/src/components/LogUpload.vue
 --> 
 <template>
@@ -10,6 +10,9 @@
     <div class="main">
       <div class="mb30" style="text-align:center">通知用户上传</div>
       <el-form :model="upForm" :rules="upRules" ref="upForm" label-width="70px" class="up-Form">
+        <el-form-item label="user_id:" prop="userid">
+          <el-input v-model="upForm.userid"></el-input>
+        </el-form-item>
         <el-form-item label="env:" prop="env">
           <el-select v-model="upForm.env" placeholder="请选择环境">
             <el-option label="liveme-qa" value="liveme-QA"></el-option>
@@ -18,10 +21,6 @@
             <el-option label="猎户-prod" value="cmcm-Prod"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="user_id:" prop="userid">
-          <el-input v-model="upForm.userid"></el-input>
-        </el-form-item>
-
         <el-form-item>
           <el-button type="primary" @click="submitUpForm('upForm')">通知上传</el-button>
           <el-button @click="resetForm('upForm')">重置</el-button>
@@ -55,7 +54,6 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :picker-options="expireTimeOption"
             value-format="timestamp"
           ></el-date-picker>
         </el-form-item>
@@ -99,11 +97,11 @@ export default {
       downRules: {
         appid: [{ required: true, message: "请输入appid", trigger: "blur" }]
       },
-      expireTimeOption: {
-        disabledDate(date) {
-          return date.getTime() > Date.now() - 24 * 60 * 60 * 1000;
-        }
-      },
+      // expireTimeOption: {
+      //   disabledDate(date) {
+      //     return date.getTime() > Date.now() - 24 * 60 * 60 * 1000;
+      //   }
+      // },
       list: [],
       dialogTableVisible: false
     };
@@ -149,8 +147,8 @@ export default {
           let data = {};
           for (const key in this.downForm) {
             if (typeof this.downForm[key] == "object") {
-              data.begintime = this.downForm[key][0];
-              data.endtime = this.downForm[key][1];
+              data.begintime = this.downForm[key][0]/1000;
+              data.endtime = this.downForm[key][1]/1000;
             } else {
               if (this.downForm[key]) {
                 data[key] = this.downForm[key];
@@ -177,7 +175,7 @@ export default {
           this.$message({
             message: `[msg]:${response.data.msg} [resp]:${response.data.resp}`,
             type: "success",
-            duration:5000
+            duration: 5000
           });
         } else {
           this.$message.error(response.data.msg);
