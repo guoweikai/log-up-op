@@ -1,7 +1,7 @@
 <!--
  * @Date: 2020-07-13 07:37:00
  * @LastEditors: GWK
- * @LastEditTime: 2020-07-13 21:32:39
+ * @LastEditTime: 2020-07-14 11:43:40
  * @FilePath: /log-upload/src/components/LogUpload.vue
 --> 
 <template>
@@ -10,6 +10,10 @@
     <div class="main">
       <div class="mb30" style="text-align:center">通知用户上传</div>
       <el-form :model="upForm" :rules="upRules" ref="upForm" label-width="70px" class="up-Form">
+        <el-form-item label="appid_id:" prop="appid">
+          <el-input v-model="upForm.appid"></el-input>
+        </el-form-item>
+
         <el-form-item label="user_id:" prop="userid">
           <el-input v-model="upForm.userid"></el-input>
         </el-form-item>
@@ -81,10 +85,18 @@ export default {
   data() {
     return {
       upForm: {
+        appid: "",
         userid: "",
         env: ""
       },
       upRules: {
+        appid: [
+          {
+            required: true,
+            message: "请输入appid",
+            trigger: "blur"
+          }
+        ],
         userid: [{ required: true, message: "请输入用户Id", trigger: "blur" }],
         env: [{ required: true, message: "请选择环境", trigger: "change" }]
       },
@@ -130,6 +142,7 @@ export default {
           // eslint-disable-next-line no-unused-vars
           let data = {
             userid: this.upForm.userid,
+            appid:this.upForm.appid,
             env: this.upForm.env
           };
           data = this.formatData(data);
@@ -147,8 +160,8 @@ export default {
           let data = {};
           for (const key in this.downForm) {
             if (typeof this.downForm[key] == "object") {
-              data.begintime = this.downForm[key][0]/1000;
-              data.endtime = this.downForm[key][1]/1000;
+              data.begintime = this.downForm[key][0] / 1000;
+              data.endtime = this.downForm[key][1] / 1000;
             } else {
               if (this.downForm[key]) {
                 data[key] = this.downForm[key];
@@ -201,39 +214,6 @@ export default {
         }
       });
     },
-    // 下载
-    // download(params) {
-    //   this.$http({
-    //     method: "get",
-    //     url: `/v1/download${params}`,
-    //     responseType: "arraybuffer"
-    //   }).then(response => {
-    //     console.log(response);
-    //     let blob = new Blob([response.data]);
-    //     this.saveAs(blob, "aaaaa");
-    //   });
-    // },
-
-    // saveAs(blob, filename) {
-    //   if (window.navigator.msSaveOrOpenBlob) {
-    //     navigator.msSaveBlob(blob, filename);
-    //   } else {
-    //     const link = document.createElement("a");
-    //     const body = document.querySelector("body");
-
-    //     link.href = window.URL.createObjectURL(blob); // 创建对象url
-    //     link.download = filename;
-
-    //     // fix Firefox
-    //     link.style.display = "none";
-    //     body.appendChild(link);
-
-    //     link.click();
-    //     body.removeChild(link);
-
-    //     window.URL.revokeObjectURL(link.href); // 通过调用 URL.createObjectURL() 创建的 URL 对象
-    //   }
-    // },
     formatData(obj) {
       var str = "?";
       for (var i in obj) {
