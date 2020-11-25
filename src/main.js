@@ -10,6 +10,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import App from './App.vue'
+import router from './router'
 axios.defaults.baseURL ="http://10.60.129.3:30008"
 // axios.defaults.baseURL = "http://119.81.49.253:30008"
 Vue.use(VueAxios, axios)
@@ -19,4 +20,5 @@ Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
+  router
 }).$mount('#app')

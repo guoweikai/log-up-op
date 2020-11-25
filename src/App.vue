@@ -6,19 +6,14 @@
 --> 
 <template>
   <div id="app">
-    <LogUpload/>
+    <router-view />
   </div>
 </template>
 
 <script>
-import LogUpload from './components/LogUpload.vue'
-
 export default {
-  name: 'App',
-  components: {
-    LogUpload
-  }
-}
+  name: "App",
+};
 </script>
 
 <style>
