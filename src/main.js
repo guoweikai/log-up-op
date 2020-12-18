@@ -12,7 +12,7 @@ import VueAxios from 'vue-axios'
 import App from './App.vue'
 import router from './router'
 // axios.defaults.baseURL ="http://10.60.129.3:30008"
-// axios.defaults.baseURL = "http://119.81.49.253:30008"
+// axios.defaults.baseURL = "http://rtc-fs.linkv.fun"
 Vue.use(VueAxios, axios)
 Vue.use(ElementUI);
 

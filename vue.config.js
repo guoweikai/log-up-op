@@ -1,4 +1,4 @@
 module.exports = {
-    // 选项...
-    publicPath:'./static'
-  }
+  // 选项...
+  publicPath: '/static'
+}

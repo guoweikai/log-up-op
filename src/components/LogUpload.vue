@@ -8,8 +8,14 @@
   <!-- 上传表单 -->
   <div>
     <div class="main">
-      <div class="mb30" style="text-align:center">通知用户上传</div>
-      <el-form :model="upForm" :rules="upRules" ref="upForm" label-width="70px" class="up-Form">
+      <div class="mb30" style="text-align: center">通知用户上传</div>
+      <el-form
+        :model="upForm"
+        :rules="upRules"
+        ref="upForm"
+        label-width="70px"
+        class="up-Form"
+      >
         <el-form-item label="appid_id:" prop="appid">
           <el-input v-model="upForm.appid"></el-input>
         </el-form-item>
@@ -26,7 +32,9 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitUpForm('upForm')">通知上传</el-button>
+          <el-button type="primary" @click="submitUpForm('upForm')"
+            >通知上传</el-button
+          >
           <el-button @click="resetForm('upForm')">重置</el-button>
         </el-form-item>
       </el-form>
@@ -34,7 +42,7 @@
     <div class="line"></div>
     <!-- 筛选 下载表单 -->
     <div class="main">
-      <div class="mb30 mt100" style="text-align:center">查询日志</div>
+      <div class="mb30 mt100" style="text-align: center">查询日志</div>
       <el-form
         :model="downForm"
         :rules="downRules"
@@ -62,14 +70,24 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitDownForm('downForm')">查询</el-button>
+          <el-button type="primary" @click="submitDownForm('downForm')"
+            >查询</el-button
+          >
           <el-button @click="resetForm('downForm')">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <el-dialog title="日志列表" :visible.sync="dialogTableVisible" width="600px">
+    <el-dialog
+      title="日志列表"
+      :visible.sync="dialogTableVisible"
+      width="600px"
+    >
       <el-table :data="list">
-        <el-table-column property="name" label="文件名称" align="center"></el-table-column>
+        <el-table-column
+          property="name"
+          label="文件名称"
+          align="center"
+        ></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <a :href="scope.row.url">下载</a>
@@ -85,29 +103,29 @@ export default {
   data() {
     return {
       upForm: {
-        appid: "",
+        appid: "1069348354",
         userid: "",
-        env: ""
+        env: "",
       },
       upRules: {
         appid: [
           {
             required: true,
             message: "请输入appid",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         userid: [{ required: true, message: "请输入用户Id", trigger: "blur" }],
-        env: [{ required: true, message: "请选择环境", trigger: "change" }]
+        env: [{ required: true, message: "请选择环境", trigger: "change" }],
       },
       downForm: {
-        appid: "",
+        appid: "1069348354",
         roomid: "",
         userid: "",
-        time: ""
+        time: "",
       },
       downRules: {
-        appid: [{ required: true, message: "请输入appid", trigger: "blur" }]
+        appid: [{ required: true, message: "请输入appid", trigger: "blur" }],
       },
       // expireTimeOption: {
       //   disabledDate(date) {
@@ -115,7 +133,7 @@ export default {
       //   }
       // },
       list: [],
-      dialogTableVisible: false
+      dialogTableVisible: false,
     };
   },
 
@@ -128,22 +146,22 @@ export default {
       console.log(data);
     },
     handleClick() {
-      this.list.forEach(item => {
+      this.list.forEach((item) => {
         let data = {
-          filename: item
+          filename: item,
         };
         data = this.formatData(data);
         this.download(data);
       });
     },
     submitUpForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           // eslint-disable-next-line no-unused-vars
           let data = {
             userid: this.upForm.userid,
-            appid:this.upForm.appid,
-            env: this.upForm.env
+            appid: this.upForm.appid,
+            env: this.upForm.env,
           };
           data = this.formatData(data);
           this.notify(data);
@@ -154,7 +172,7 @@ export default {
       });
     },
     submitDownForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           // this.query(data)
           let data = {};
@@ -182,13 +200,13 @@ export default {
     },
     // 通知
     notify(params) {
-      this.$http.get(`/v1/notify${params}`).then(response => {
+      this.$http.get(`/v1/notify${params}`).then((response) => {
         if (response.data && response.data.code == 0) {
           this.list = response.data.list;
           this.$message({
             message: `[msg]:${response.data.msg} [resp]:${response.data.resp}`,
             type: "success",
-            duration: 5000
+            duration: 5000,
           });
         } else {
           this.$message.error(response.data.msg);
@@ -197,17 +215,18 @@ export default {
     },
     // 查询
     query(params) {
-      this.$http.get(`/v1/query${params}`).then(response => {
+      this.$http.get(`/v1/query${params}`).then((response) => {
         if (response.data && response.data.code == 0) {
           this.list = [];
-          response.data.list.forEach(item => {
+          response.data.list.forEach((item) => {
             let name = item.split("/").pop();
             let data = {
               url: item,
-              name: name
+              name: name,
             };
             this.list.push(data);
           });
+          this.list = this.list.reverse();
           this.dialogTableVisible = true;
         } else {
           this.$message.error(response.data.message);
@@ -224,8 +243,8 @@ export default {
       }
       str = str.substr(0, str.length - 1);
       return str;
-    }
-  }
+    },
+  },
 };
 </script>
 
